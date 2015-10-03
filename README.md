@@ -12,15 +12,15 @@ This is a auto testing tool for game developers. It automatically test and sugge
 	
 ### Development Route Map
 ````
-	1	A_____________	Instant game
-	2			|		|_____	Real time game
-	3			|_____________	Graphic for data analyse
-	4								|____	Graphic for game
+	1	A  ___________	Instant game
+	2		|	|_____	Real time game
+	3		|_____________	Graphic for data analyse
+	4				|____	Graphic for game
 
-	1	B_____________	Analyse
-	2					|_____	Modelise
-	3					|_____	Graphics
-	4					|_____	Hacking & Data Fetching
+	1	B  ___________	Analyse
+	2			|_____	Modelise
+	3			|_____	Graphics
+	4			|_____	Hacking & Data Fetching
 ````
 ### Upcoming Development
 ````
