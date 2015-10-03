@@ -1,4 +1,4 @@
-from Testers import TesterConsole
+from Testers1 import TesterConsole
 
 # * Run a tester
 tester = TesterConsole.TesterConsole()
