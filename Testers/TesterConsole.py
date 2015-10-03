@@ -116,8 +116,8 @@ class TesterConsole:
         seed = 1
         while len(uList) < universeMax:
             u = self.doExternal_runEnvironment( seed )
-            if self.doExternal_filterEnvironment(u, [minYear, maxYear], [maxYear, maxCreature]):
-                uList += u
+            if self.doExternal_filterEnvironment(u, [minYear, minCreature], [maxYear, maxCreature]):
+                uList += [ u ]
             seed += 1
         # [] Print results
         self.printResult(uList)
