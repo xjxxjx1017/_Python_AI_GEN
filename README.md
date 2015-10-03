@@ -2,12 +2,13 @@
 This is a auto testing tool for game developers. It automatically test and suggest best configurations for games.
 
 ### Current Flow
-1. A console pops up
-2. The user types in a command
-3. The console runs the "Survival Game" simulation with randomly generated configuration for multiple times
-4. The console give out a summary, a list of reports
-5. The user can type in an integer to check details of a report and the configuration that runs the simulation
-6. Go back to step 2
+1. Run main.py to start
+2. A console pops up
+3. The user types in a command
+4. The console runs the "Survival Game" simulation with randomly generated configuration for multiple times
+5. The console give out a summary, a list of reports
+6. The user can type in an integer to check details of a report and the configuration that runs the simulation
+7. Return to step 3
 	
 ### Development Route Map
 ````
