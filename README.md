@@ -9,16 +9,16 @@ This is a auto testing tool for game developers. It automatically test and sugge
 5. The console give out a summary, a list of reports
 6. The user can type in an integer to check details of a report and the configuration that runs the simulation
 7. Return to step 3
-	
+
 ### Development Route Map
 ````
 	1	A  ___________	Instant game
 	2		|	|_____	Real time game
 	3		|_____________	Graphic for data analyse
-	4				|____	Graphic for game
-
+	4				|_____  Graphic for game
+	
 	1	B  ___________	Analyse
-	2			|_____	Modelise
+	2			|_____	Modularize
 	3			|_____	Graphics
 	4			|_____	Hacking & Data Fetching
 ````
@@ -28,7 +28,7 @@ This is a auto testing tool for game developers. It automatically test and sugge
 * A3    Show data in pixel colors!	A reports for all generations.
 * A2    A real simulation game, game is not instant, shooting
 
-* B2    Modelize - auto parameter tester
+* B2    Modularize - auto parameter tester
 * B4    PixelGraphic mode for command input XD, for hacking
 
 * B1    time limit, or cycle limit, 100ms - break & give results

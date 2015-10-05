@@ -2,6 +2,8 @@
 import math
 from ThirdParty import RandomEx
 
+# $ <Static> Generate a config file, according to a seed
+# $ For the same seed, the config file will be the same
 def generate(_seed):
     config = AutoConfig()
     config.seed = _seed
@@ -23,10 +25,11 @@ def generate(_seed):
     config.chance_of_0_100_pass_lost = r.randomInt(0, 100)
     return config
 
+#---- Generate a config file by a seed
 class AutoConfig:
 
     def __init__(self):
-        # * Pre-set parameters for random-config-testing
+        # * Data that need to be generated
         self.seed = 0
         self.chance_of_0_19_event = 0
         self.chance_of_0_19_encounter = 0
@@ -44,6 +47,7 @@ class AutoConfig:
         self.scale_log_e_of_1_100_wandering_gain = 0
         self.chance_of_0_100_pass_lost = 0
 
+    # $ Serialize the config data into a string
     def toString(self):
         rlt = "Config: " + str(self.seed) + "\n"
         rlt += "chance_of_0_19_event:                          %.0f\n" % self.chance_of_0_19_event

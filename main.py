@@ -1,4 +1,17 @@
 from Testers import TesterConsole
+from Testers import PixelConsole
+
+import PIL
+
+
+
+def main():
+    pC = PixelConsole.PixelConsole()
+    pC.open()
+    pC.run()
+    pC.close()
+
+main()
 
 # * Run a tester
 tester = TesterConsole.TesterConsole()

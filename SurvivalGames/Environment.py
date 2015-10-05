@@ -5,14 +5,14 @@ from . import AutoConfig
 
 class Environment(object):
 
-    # * A randomly generated config file that can be tracked
+    # $ A randomly generated config file that can be tracked
     def __init__(self):
         self.seed = 0
         self.rlt_endYear = 0
         self.rlt_creatureCount = 0
         self.config = None
 
-
+    # $ run the simulation
     def run(self, seed):
         cList = []
         self.seed = seed
@@ -99,7 +99,7 @@ class Environment(object):
         for key, value in self.rlt_remainList.items():
             SystemPlus.consolePrintL( str( key ) + "|" + str(len( value )) + ", " )
 
-
+    # $ Return a string of detail information about this universe
     def toStringLimit(self, limit):
         rlt = ""
         # [] Print the end year and total c count

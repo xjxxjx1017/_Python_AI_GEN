@@ -2,7 +2,6 @@ from ThirdParty import SystemPlus
 from SurvivalGames import AutoConfig
 from SurvivalGames import Environment
 import traceback
-import sys
 
 class TesterConsole:
 
@@ -10,7 +9,7 @@ class TesterConsole:
         self.lastTest = []
         self.lastCommand = []
 
-    # < These are the interface that connected to the simulations
+    # < These are the interfaces that connected to the simulations
     def doExternal_generateAutoConfig(self, seed):
         return AutoConfig.generate(seed)
 
@@ -29,7 +28,7 @@ class TesterConsole:
                str(u.rlt_endYear) + "\tCreature count: " + str(u.rlt_creatureCount)
     # </
 
-
+    # $ Run the tester
     def run(self):
         # * Show some 'help' at the start of the program
         self.printHelp()
@@ -42,11 +41,12 @@ class TesterConsole:
             try:
                 # * Do some command
                 self.doCommand(command)
-            except Exception as err:
+            except Exception:
                 SystemPlus.consolePrintL(traceback.format_exc())
                 SystemPlus.consolePrintL( "You can still continue with the terminal:")
                 SystemPlus.consolePrintL( "///////////////////////////////////////////////")
 
+    # $ Run a command
     def doCommand( self, command ):
         # # parse command as a lower case string
         command = command.lower()
@@ -58,6 +58,7 @@ class TesterConsole:
         # * Parse commands and run it!
         self.parseCommand( commands )
 
+    # $ Parse a command
     def parseCommand(self, commands):
         parameters = []
         if commands[0] == "help":
@@ -96,6 +97,7 @@ class TesterConsole:
                 SystemPlus.consolePrintL(configDisc)
                 SystemPlus.consolePrintL(self.lastTest[index].toStringLimit(20))
 
+    # $ Run a series of tests for a single seed
     def runSingleTest(self, seed, times):
         # * Config params for testing
         uList = []
@@ -108,6 +110,7 @@ class TesterConsole:
         self.printResult(uList)
         self.lastTest = uList
 
+    # $ Run a series of tests, filter the result
     def runFilterTest(self, count, minYear, maxYear, minCreature, maxCreature):
         # * Config params for testing
         uList = []
@@ -123,6 +126,7 @@ class TesterConsole:
         self.printResult(uList)
         self.lastTest = uList
 
+    # $ Run a standard test
     def runTest(self):
         uList = []
         universeMax = 30
@@ -136,12 +140,14 @@ class TesterConsole:
         self.printResult(uList)
         self.lastTest = uList
 
+    # $ Print result for all tests
     def printResult(self, uList):
         SystemPlus.consoleClear()
         for i in range(0, len(uList)):
             u = uList[i]
             SystemPlus.consolePrintL( self.doExternal_getResult( u, i+1 ))
 
+    # $ Print help
     def printHelp(self):
         SystemPlus.consolePrintL("""
 ////////////// HELP //////////////////
