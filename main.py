@@ -1,15 +1,18 @@
 from Testers import TesterConsole
 from Testers import PixelConsole
 
-import PIL
+from Testers import PixelConsoleReader
 
 
 
 def main():
-    pC = PixelConsole.PixelConsole()
-    pC.open()
-    pC.run()
-    pC.close()
+    # pcr = PixelConsoleReader.PixelConsoleReader()
+    # pcr.getScreenShot()
+
+    pc = PixelConsole.PixelConsole()
+    pc.open()
+    pc.run()
+    pc.close()
 
 main()
 

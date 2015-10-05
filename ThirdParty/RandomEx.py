@@ -1,8 +1,9 @@
 import random
 
+#---- A wrapped random number generator
 class RandomEx(object):
 
-    # * Create a random generator with a seed (default: system time)
+    # $ Create a random generator with a seed (default: system time)
     def __init__(self, _seed=-1):
         self.seed = 0
         self.r = 0
@@ -24,8 +25,9 @@ class RandomEx(object):
     def random(self):
         return self.r.random()
 
-
+# $ To initialize static parameters (below)
 def instance_r():
     return RandomEx()
 
+# $ A global random number generator, for common use
 r = instance_r()

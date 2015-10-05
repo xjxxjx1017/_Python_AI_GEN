@@ -49,3 +49,5 @@ Temporary Items
 .idea/modules.xml
 .idea/vcs.xml
 *.bmp
+PIL/*
+PIL/__init__.py
