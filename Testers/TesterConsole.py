@@ -29,13 +29,11 @@ class TesterConsole:
     # </
 
     # $ Run the tester
-    def run(self):
+    def run(self, command, showHelp):
         # * Show some 'help' at the start of the program
-        self.printHelp()
-
-        command = ""
-        while command is not "quit":
-            command = input()
+        if showHelp == True:
+            self.printHelp()
+        if command is not "quit":
             # * Do some command
             # [] Stop any false command from breaking the program
             try:

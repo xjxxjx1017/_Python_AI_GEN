@@ -119,6 +119,7 @@ Good night!
 
     def __init__(self):
         self.win = None
+        self.quiting = False
 
     # $ Open up a "console", which show letter's in colored pixels
     def open(self):
@@ -131,7 +132,13 @@ Good night!
         try:
             # * Pause the system, waiting for a mouse click
             self.testRun2()
-            self.win.getMouse()
+            # * wait until it was tell (by other thread) to quit
+            while self.quiting == False:
+                # self.win.getMouse()
+                self.win.update()
+                time.sleep(.1) # give up thread
+            # * quit after
+            self.close()
         except Exception:
             SystemPlus.consolePrintL(traceback.format_exc())
             SystemPlus.consolePrintL( "You can still continue with the terminal:")
