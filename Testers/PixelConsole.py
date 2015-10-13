@@ -4,24 +4,16 @@ from ThirdParty import RandomEx
 import traceback
 
 PADDING = 16
-PIXEL_SIZE = 8
-WINDOW_SIZE_X = 500
+PIXEL_SIZE = 4
+WINDOW_SIZE_X = 200
 WINDOW_SIZE_Y = 500
+WINDOW_COLUMN_COUNT = 3
 AUTO_FLUSH = True
+PIXEL_COUNT_X = int( ( WINDOW_SIZE_X - PADDING * 2 ) / PIXEL_SIZE )
+PIXEL_COUNT_Y = int( ( WINDOW_SIZE_Y - PADDING * 2 ) / PIXEL_SIZE )
+WINDOW_SIZE_X_TRUE = ( WINDOW_SIZE_X ) * WINDOW_COLUMN_COUNT + PADDING
 
 class PixelConsole(object):
-
-    def testRun(self):
-        colors = ["white", "green", "blue", "red"]
-        for j in range( PADDING, WINDOW_SIZE_Y - PADDING, PIXEL_SIZE ):
-            for i in range( PADDING, WINDOW_SIZE_X - PADDING, PIXEL_SIZE ):
-                self.drawRectangle( i, j, colors[ RandomEx.r.randomInt(0,3) ] )
-        for j in range(0,PIXEL_SIZE * 4,PIXEL_SIZE):
-            for i in range( PADDING, 100, PIXEL_SIZE * 4):
-                self.drawRectangle( i+j, i+j, colors[ int(j/PIXEL_SIZE) ] )
-        if AUTO_FLUSH is False:
-            self.win.flush()
-
 
     def testRun2(self):
         words = """Hello world!
@@ -39,42 +31,141 @@ Good morning!
 Good night!
 """
         words = words.lower()
-        colors = []
-        # * Convert letters to pixels
-        for l in words:
-            colors += self.letter2color(l)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+
+    # $ Draw a string on the screen
+    def _drawString(self):
         # * Draw pixels (sentence) on the screen :)
         # {} Start the loop
-        countW = int( ( WINDOW_SIZE_X - PADDING * 2 ) / PIXEL_SIZE )
-        countH = int( ( WINDOW_SIZE_Y - PADDING * 2 ) / PIXEL_SIZE )
-        # * Count for the color index
-        index = -1
-        breakCount = 0
-        for j in range( 0, countH ):
-            for i in range( 0, countW ):
-                # * Break again if needed
-                if breakCount > 0:
-                    breakCount -= 1
-                    break
-                # # Calculate the position for pixels
-                W = PADDING + i * PIXEL_SIZE
-                H = PADDING + j * PIXEL_SIZE
-                # * Go to the next color
-                index += 1
-                # ? If there're more colors to print
-                if index < len( colors ):
-                    # * Print the color
-                    self.drawRectangle( W, H, colors[ index ] )
-                    # ? If the color is white
-                    if colors[index] == 'white':
-                        # * Go to the next line and leave a blank line
-                        breakCount += 1
-                        break
-                else:
-                    break
+        while True:
+            if self.curCursorX >= PIXEL_COUNT_X:
+                self.curCursorX = 0
+                self.curCursorY += 1
+                self.clearNextNLines( 2 )
+            if self.curCursorY >= PIXEL_COUNT_Y:
+                self.curCursorX = 0
+                self.curCursorY = 0
+                self.curCursorCol += 1
+            if self.curCursorCol >= WINDOW_COLUMN_COUNT:
+                self.curCursorX = 0
+                self.curCursorY = 0
+                self.curCursorCol = 0
+            # # Calculate the position for pixels
+            W = PADDING + self.curCursorX * PIXEL_SIZE + self.curCursorCol * ( PIXEL_COUNT_X * PIXEL_SIZE + PADDING )
+            H = PADDING + self.curCursorY * PIXEL_SIZE
+            # ? If there're more colors to print
+            if self.curColorIndex < len( self.totalColors ):
+                # * Print the color
+                color = self.totalColors[ self.curColorIndex ]
+                self.curColorIndex += 1
+                self.drawRectangle( W, H, color )
+                # ? If the color is white
+                if color == 'white':
+                    # * Go to the next line and leave a blank line
+                    self.curCursorX = 0
+                    self.curCursorY += 1
+                    self.clearNextNLines( 2 )
+                    self.curCursorY += 1
+                    continue
+            else:
+                break
+            self.curCursorX += 1
+
+    # $ Draw a string on the screen
+    def clearNextNLines(self, lines):
+        saveCursorX = self.curCursorX
+        saveCursorY = self.curCursorY
+        saveCursorCol = self.curCursorCol
+        newLineCount = 0
+        # * Draw pixels (sentence) on the screen :)
+        # {} Start the loop
+        while True:
+            self.curCursorX = 0
+            if self.curCursorY >= PIXEL_COUNT_Y:
+                self.curCursorX = 0
+                self.curCursorY = 0
+                self.curCursorCol += 1
+            if self.curCursorCol >= WINDOW_COLUMN_COUNT:
+                self.curCursorX = 0
+                self.curCursorY = 0
+                self.curCursorCol = 0
+            # # Calculate the position for pixels
+            W = PADDING + self.curCursorX * PIXEL_SIZE + self.curCursorCol * ( PIXEL_COUNT_X * PIXEL_SIZE + PADDING )
+            H = PADDING + self.curCursorY * PIXEL_SIZE
+            # ? If there're more colors to print
+            if newLineCount < lines:
+                # * Print the color
+                self.drawRectangleSize( W, H, "black", PIXEL_COUNT_X, 1 )
+                newLineCount +=1
+            else:
+                break
+            self.curCursorY += 1
+        self.curCursorX = saveCursorX
+        self.curCursorY = saveCursorY
+        self.curCursorCol = saveCursorCol
+
+    def drawString(self, words):
+        # * Convert letters to pixels
+        for l in words:
+            for c in self.letter2color(l):
+                self.totalColors.append( c )
+        self._drawString()
+        self.clearNextNLines( 3 )
+        # * Clear some lines
         # * Refresh the screen
         if AUTO_FLUSH is False:
             self.win.flush()
+
+    def __init__(self):
+        self.win = None
+        self.quiting = False
+        self.curCursorX = 0
+        self.curCursorY = 0
+        self.curCursorCol = 0
+        self.totalString = []
+        self.totalColors = []
+        self.curColorIndex = 0
+
+    # $ Open up a "console", which show letter's in colored pixels
+    def open(self):
+        self.win = GraphWin("Pixel Console", WINDOW_SIZE_X_TRUE, WINDOW_SIZE_Y, AUTO_FLUSH)
+        self.win.setBackground( "black")
+
+    # $ Started to receive and produce information
+    def run(self):
+        # [] Stop any false command from breaking the program
+        try:
+            # * Pause the system, waiting for a mouse click
+            # self.testRun2()
+            # * wait until it was tell (by other thread) to quit
+            while self.quiting == False:
+                # self.win.getMouse()
+                self.win.update()
+                time.sleep(.1) # give up thread
+            # * quit after
+            self.close()
+        except Exception:
+            SystemPlus.consolePrintL(traceback.format_exc())
+            SystemPlus.consolePrintL( "You can still continue with the terminal:")
+            SystemPlus.consolePrintL( "///////////////////////////////////////////////")
+
+    # $ Close the "console"
+    def close(self):
+        self.win.close()
 
 
     def letter2color(self, letter):
@@ -94,14 +185,14 @@ Good night!
         # * Cold colors for the front group
         m['b'] = ['Medium Aquamarine']
         m['c'] = ['Lime Green']
-        m['d'] = ['Dark Green']
+        m['d'] = ['#006400'] # 'Dark Green'
         m['f'] = ['Dodger Blue']
         m['g'] = ['Spring Green']
-        m['h'] = ['Sea Green']
+        m['h'] = ['#87ceeb'] # 'Sky Blue'
         m['j'] = ['Light Sea Green']
         m['k'] = ['Forest Green']
         # * light warm colors for the second group
-        m['l'] = ['Indian Red']
+        m['l'] = ['#cd5c5c'] # 'Indian Red'
         m['m'] = ['Saddle Brown']
         m['n'] = ['Peru']
         m['p'] = ['Tan']
@@ -111,42 +202,18 @@ Good night!
         m['t'] = ['Rosy Brown']
         # * Cold warm mixed colors for the last group
         m['v'] = ['Hot Pink']
-        m['w'] = ['Deep Pink']
+        m['w'] = ['#ff1493'] # 'Deep Pink'
         m['x'] = ['Maroon']
         m['y'] = ['Medium Purple']
         m['z'] = ['Dark Violet']
         return m[letter]
 
-    def __init__(self):
-        self.win = None
-        self.quiting = False
-
-    # $ Open up a "console", which show letter's in colored pixels
-    def open(self):
-        self.win = GraphWin("Pixel Console", WINDOW_SIZE_X, WINDOW_SIZE_Y, AUTO_FLUSH)
-        self.win.setBackground( "black")
-
-    # $ Started to receive and produce information
-    def run(self):
-        # [] Stop any false command from breaking the program
-        try:
-            # * Pause the system, waiting for a mouse click
-            self.testRun2()
-            # * wait until it was tell (by other thread) to quit
-            while self.quiting == False:
-                # self.win.getMouse()
-                self.win.update()
-                time.sleep(.1) # give up thread
-            # * quit after
-            self.close()
-        except Exception:
-            SystemPlus.consolePrintL(traceback.format_exc())
-            SystemPlus.consolePrintL( "You can still continue with the terminal:")
-            SystemPlus.consolePrintL( "///////////////////////////////////////////////")
-
-    # $ Close the "console"
-    def close(self):
-        self.win.close()
+    # $ Draw a rectangle on the screen with a specific color
+    def drawRectangleSize(self, x, y, color, gridCountX, gridCountY):
+        c = Rectangle( Point( x, y ), Point( x + PIXEL_SIZE * gridCountX - 1, y + PIXEL_SIZE * gridCountY - 1) )
+        c.setOutline( color )
+        c.setFill( color )
+        c.draw( self.win )
 
     # $ Draw a rectangle on the screen with a specific color
     def drawRectangle(self, x, y, color):
