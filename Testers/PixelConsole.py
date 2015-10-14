@@ -1,6 +1,6 @@
 from Lib.graphics import *
 from ThirdParty import SystemPlus
-from ThirdParty import RandomEx
+from Testers import OneWayBuffer
 import traceback
 
 PADDING = 16
@@ -15,37 +15,17 @@ WINDOW_SIZE_X_TRUE = ( WINDOW_SIZE_X ) * WINDOW_COLUMN_COUNT + PADDING
 
 class PixelConsole(object):
 
-    def testRun2(self):
-        words = """Hello world!
-This is my home, welcome to the new fancy world!
-Lovely place, lovely grace.
-Hello world!
-Hello world!
-Hello world!
-Hello world!
-Hello world!
-Hello world!
-Hello world!
-Hi there!
-Good morning!
-Good night!
-"""
-        words = words.lower()
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
-        self.drawString(words)
+    def __init__(self, inputBuffer:"OneWayBuffer"):
+        self.win = None
+        self.quiting = False
+        self.curCursorX = 0
+        self.curCursorY = 0
+        self.curCursorCol = 0
+        self.totalString = []
+        self.totalColors = []
+        self.curColorIndex = 0
+        self.isRunning = False
+        self.inputBuffer = inputBuffer
 
     # $ Draw a string on the screen
     def _drawString(self):
@@ -84,6 +64,15 @@ Good night!
             else:
                 break
             self.curCursorX += 1
+
+    # $ Clear the whole screen
+    def clearAll(self):
+        self.curCursorX = 0
+        self.curCursorY = 0
+        self.curCursorCol = 0
+        self.totalColors = []
+        self.curColorIndex = 0
+        self.drawFullScreen("black")
 
     # $ Draw a string on the screen
     def clearNextNLines(self, lines):
@@ -130,16 +119,6 @@ Good night!
         if AUTO_FLUSH is False:
             self.win.flush()
 
-    def __init__(self):
-        self.win = None
-        self.quiting = False
-        self.curCursorX = 0
-        self.curCursorY = 0
-        self.curCursorCol = 0
-        self.totalString = []
-        self.totalColors = []
-        self.curColorIndex = 0
-
     # $ Open up a "console", which show letter's in colored pixels
     def open(self):
         self.win = GraphWin("Pixel Console", WINDOW_SIZE_X_TRUE, WINDOW_SIZE_Y, AUTO_FLUSH)
@@ -154,9 +133,12 @@ Good night!
             # * wait until it was tell (by other thread) to quit
             while self.quiting == False:
                 # self.win.getMouse()
+                self.drawString( self.inputBuffer.readNew() )
                 self.win.update()
                 time.sleep(.1) # give up thread
+                self.isRunning = True
             # * quit after
+            self.isRunning = False
             self.close()
         except Exception:
             SystemPlus.consolePrintL(traceback.format_exc())
@@ -169,6 +151,7 @@ Good night!
 
 
     def letter2color(self, letter):
+        letter = letter.lower()
         m = {}
         # * Symbolic colors for symbols
         m['\n'] = ['black', 'white']
@@ -176,6 +159,7 @@ Good night!
         m['!'] = ['black', 'red']
         m[','] = ['black', 'Dim Gray']
         m['.'] = ['black', 'gray']
+        m['/'] = ['blue', 'green']
         # * Strong warm colors for A.E.I.O.U.
         m['a'] = ['Dark Orange']
         m['e'] = ['orange']
@@ -206,11 +190,22 @@ Good night!
         m['x'] = ['Maroon']
         m['y'] = ['Medium Purple']
         m['z'] = ['Dark Violet']
-        return m[letter]
+
+        if letter not in m:
+            return ['green']
+        else:
+            return m[letter]
 
     # $ Draw a rectangle on the screen with a specific color
     def drawRectangleSize(self, x, y, color, gridCountX, gridCountY):
         c = Rectangle( Point( x, y ), Point( x + PIXEL_SIZE * gridCountX - 1, y + PIXEL_SIZE * gridCountY - 1) )
+        c.setOutline( color )
+        c.setFill( color )
+        c.draw( self.win )
+
+    # $ Draw a rectangle, fill the screen
+    def drawFullScreen(self, color):
+        c = Rectangle( Point( 0, 0 ), Point( WINDOW_SIZE_X_TRUE, WINDOW_SIZE_Y ) )
         c.setOutline( color )
         c.setFill( color )
         c.draw( self.win )
@@ -228,3 +223,35 @@ Good night!
         c.setOutline( color )
         c.draw( self.win )
 
+
+    def testRun2(self):
+        words = """Hello world!
+This is my home, welcome to the new fancy world!
+Lovely place, lovely grace.
+Hello world!
+Hello world!
+Hello world!
+Hello world!
+Hello world!
+Hello world!
+Hello world!
+Hi there!
+Good morning!
+Good night!
+"""
+        words = words.lower()
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)
+        self.drawString(words)

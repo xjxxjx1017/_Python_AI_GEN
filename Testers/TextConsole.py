@@ -1,13 +1,15 @@
-from ThirdParty import SystemPlus
 from SurvivalGames import AutoConfig
 from SurvivalGames import Environment
+from ThirdParty import SystemPlus
+from Testers import OneWayBuffer
 import traceback
 
-class TesterConsole:
+class TextConsole:
 
-    def __init__(self):
+    def __init__(self, outputBuffer:"OneWayBuffer"):
         self.lastTest = []
         self.lastCommand = []
+        self.outputBuffer = outputBuffer
 
     # < These are the interfaces that connected to the simulations
     def doExternal_generateAutoConfig(self, seed):
@@ -40,9 +42,9 @@ class TesterConsole:
                 # * Do some command
                 self.doCommand(command)
             except Exception:
-                SystemPlus.consolePrintL(traceback.format_exc())
-                SystemPlus.consolePrintL( "You can still continue with the terminal:")
-                SystemPlus.consolePrintL( "///////////////////////////////////////////////")
+                self.consolePrintL(traceback.format_exc())
+                self.consolePrintL( "You can still continue with the terminal:")
+                self.consolePrintL( "///////////////////////////////////////////////")
 
     # $ Run a command
     def doCommand( self, command ):
@@ -92,8 +94,8 @@ class TesterConsole:
                 index = id - 1
                 seed = self.lastTest[index].seed
                 configDisc = self.doExternal_generateAutoConfig(seed).toString()
-                SystemPlus.consolePrintL(configDisc)
-                SystemPlus.consolePrintL(self.lastTest[index].toStringLimit(20))
+                self.consolePrintL(configDisc)
+                self.consolePrintL(self.lastTest[index].toStringLimit(20))
 
     # $ Run a series of tests for a single seed
     def runSingleTest(self, seed, times):
@@ -140,14 +142,26 @@ class TesterConsole:
 
     # $ Print result for all tests
     def printResult(self, uList):
-        SystemPlus.consoleClear()
+        self.consoleClear()
         for i in range(0, len(uList)):
             u = uList[i]
-            SystemPlus.consolePrintL( self.doExternal_getResult( u, i+1 ))
+            self.consolePrintL( self.doExternal_getResult( u, i+1 ))
+
+    ################## APIs #################
+
+    # $ Print line
+    def consolePrintL(self, content):
+        self.outputBuffer.add( content + "\n" )
+        SystemPlus.consolePrintL( content )
+
+    # $ Clear all
+    def consoleClear(self):
+        self.outputBuffer.clear()
+        SystemPlus.consoleClear()
 
     # $ Print help
     def printHelp(self):
-        SystemPlus.consolePrintL("""
+        self.consolePrintL("""
 ////////////// HELP //////////////////
 help                For help
 quit                Quit the console
