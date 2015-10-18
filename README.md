@@ -10,6 +10,11 @@ This is a auto testing tool for game developers. It automatically test and sugge
 6. The user can type in an integer to check details of a report and the configuration that runs the simulation
 7. Return to step 3
 
+### Current Features
+* A tiny simulation game, the survival game
+* Text console, which supports command line input & output
+* Pixel console, which shows letters in pixels
+
 ### Development Route Map
 ````
 	1	A  ___________	Instant game
