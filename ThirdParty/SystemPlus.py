@@ -14,3 +14,4 @@ def consolePrintL(s):
 
 def consolePrint(s):
     print(s, end='')
+

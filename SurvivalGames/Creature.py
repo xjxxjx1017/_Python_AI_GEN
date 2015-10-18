@@ -1,4 +1,4 @@
-from ThirdParty import SystemPlus
+
 from ThirdParty import RandomEx
 
 attribute_count = 8
@@ -30,6 +30,7 @@ def createFromGen(gen, config):
 
 
 def encounter( config, a, b):
+    from Testers import TextConsole
     # ? Check whether the ship A and B are still alive
     if a.isAlive == False or b.isAlive == False:
         return 0
@@ -53,18 +54,19 @@ def encounter( config, a, b):
             a.energy += b.energy * config.scale_demi_of_01_1_energy_gain
         b.isAlive = False
         # [] Show the battle in the console
-        SystemPlus.consolePrintL("Encounter: " + a.name + " > " + b.name + " +" + str(b.energy if b.energy > 0 else 0))
+        TextConsole.TextConsole.inst.consolePrintL("Encounter: " + a.name + " > " + b.name + " +" + str(b.energy if b.energy > 0 else 0))
     elif aWin == -1:
         # * Winner gains energy
         if a.energy > 0:
             b.energy += a.energy * config.scale_demi_of_01_1_energy_gain
         a.isAlive = False
         # [] Show the battle in the console
-        SystemPlus.consolePrintL("Encounter: " + a.name + " > " + b.name + " +" + str(a.energy if a.energy > 0 else 0))
+        TextConsole.TextConsole.inst.consolePrintL("Encounter: " + a.name + " > " + b.name + " +" + str(a.energy if a.energy > 0 else 0))
     return aWin
 
 
 def reproduce(config, a, b):
+    from Testers import TextConsole
     # ? Check whether the ship A and B are still alive
     if a.isAlive == False or b.isAlive == False:
         return None
@@ -85,7 +87,7 @@ def reproduce(config, a, b):
     # rlt.energy = a.reproduction + b.reproduction;
     a.energy -= rlt.energy * 0.5 * config.scale_demi_of_01_1_percentage_genergy_cost_b
     b.energy -= rlt.energy * 0.5 * config.scale_demi_of_01_1_percentage_genergy_cost_b
-    SystemPlus.consolePrintL("Reproduce: " + a.name + " + " + b.name + " = " + rlt.name)
+    TextConsole.TextConsole.inst.consolePrintL("Reproduce: " + a.name + " + " + b.name + " = " + rlt.name)
     return rlt
 
 

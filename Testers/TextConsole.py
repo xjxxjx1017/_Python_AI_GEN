@@ -6,10 +6,13 @@ import traceback
 
 class TextConsole:
 
+    inst = None
+
     def __init__(self, outputBuffer:"OneWayBuffer"):
         self.lastTest = []
         self.lastCommand = []
         self.outputBuffer = outputBuffer
+        TextConsole.inst = self
 
     # < These are the interfaces that connected to the simulations
     def doExternal_generateAutoConfig(self, seed):
