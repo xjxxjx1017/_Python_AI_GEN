@@ -1,5 +1,5 @@
 ## Auto Game Configuration Tester & Generator
-This is a auto testing tool for game developers. It automatically test and suggest best configurations for games.
+I'm trying to make an auto testing tool for game developers. It supposed to automatically test and suggest best configurations for games.
 
 ### Current Flow
 1. Run main.py to start
